@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="blog.mapper.PraiseMapper">
+
+    <resultMap type="Praise" id="PraiseResult">
+        <result property="id" column="id"/>
+        <result property="bloggerId" column="bloggerId"/>
+        <result property="objectId" column="objectId"/>
+        <result property="objectType" column="objectType"/>
+        <result property="praiseDate" column="praiseDate"/>
+    </resultMap>
+
+    <insert id="add" parameterType="Praise">
+		insert into t_praise values(null,#{bloggerId},#{objectId},#{objectType},now())
+	</insert>
+
+    <update id="update" parameterType="Praise">
+        update t_praise
+        <set>
+            <if test="state!=null">
+                state=#{state},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <select id="list" parameterType="Map" resultMap="PraiseResult">
+        select * from t_praise
+        <where>
+            <if test="objectId!=null">
+                and objectId=#{objectId}
+            </if>
+            <if test="objectType!=null">
+                and objectType=#{objectType}
+            </if>
+        </where>
+        order by praiseDate
+        <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+    </select>
+
+    <select id="getTotal" parameterType="Map" resultType="Long">
+        select count(*) from t_praise
+        <where>
+            <if test="objectId!=null">
+                and objectId=#{objectId}
+            </if>
+            <if test="objectType!=null">
+                and objectType=#{objectType}
+            </if>
+        </where>
+    </select>
+
+
+    <delete id="delete" parameterType="Integer">
+		delete from t_praise where id=#{id}
+	</delete>
+
+    <select id="getOne" resultType="Praise">
+        select * from t_praise where bloggerId = #{bloggerId} and objectId = #{objectId} and objectType = #{objectType}
+    </select>
+</mapper>

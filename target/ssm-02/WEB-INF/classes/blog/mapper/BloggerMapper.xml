@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="blog.mapper.BloggerMapper">
+
+    <resultMap type="Blogger" id="BloggerResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="nickName" column="nickName"/>
+        <result property="sign" column="sign"/>
+        <result property="imageName" column="imageName"/>
+        <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
+        <result property="state" column="state"/>
+        <result property="registerDate" column="registerDate"/>
+    </resultMap>
+
+    <select id="getById" resultType="Blogger">
+        select * from t_blogger where id = #{id}
+    </select>
+    <select id="login" resultType="Blogger">
+        select * from t_blogger where name = #{name} and password = #{password}
+    </select>
+    <select id="getList" resultType="Blogger">
+        select * from t_blogger
+    </select>
+    <select id="getByName" resultType="Blogger">
+        select * from t_blogger where name = #{name}
+    </select>
+
+    <insert id="insert">
+        insert into t_blogger
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="profile != null">
+                profile,
+            </if>
+            <if test="nickName != null">
+                nick_name,
+            </if>
+            <if test="sign != null">
+                sign,
+            </if>
+            <if test="imageName != null">
+                image_name,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="state == null">
+                state,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="password != null">
+                #{password},
+            </if>
+            <if test="profile != null">
+                #{profile},
+            </if>
+            <if test="nickName != null">
+                #{nick_name},
+            </if>
+            <if test="sign != null">
+                #{sign},
+            </if>
+            <if test="imageName != null">
+                #{image_name},
+            </if>
+            <if test="email != null">
+                #{email},
+            </if>
+            <if test="phone != null">
+                #{phone},
+            </if>
+            <if test="state != null">
+                #{state},
+            </if>
+            <if test="state == null">
+                1,
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="Blogger">
+        UPDATE t_blogger
+        <set>
+            <if test="nickName!=null and nickName!=''">
+                nickName=#{nickName},
+            </if>
+            <if test="password!=null and password!=''">
+                password=#{password},
+            </if>
+            <if test="sign!=null and sign!=''">
+                sign=#{sign},
+            </if>
+            <if test="imageName!=null and imageName!=''">
+                imageName=#{imageName},
+            </if>
+            <if test="profile!=null and profile!=''">
+                profile=#{profile},
+            </if>
+            <if test="email!=null and email!=''">
+                email=#{email},
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone=#{phone},
+            </if>
+            <if test="state!=null and state!=''">
+                state=#{state},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+
+
+
+    <select id="list" parameterType="Map" resultMap="BloggerResult">
+        select * from t_blogger
+        <where>
+            <if test="id!=null">
+                and id=#{id}
+            </if>
+            <if test="state!=null">
+                and state=#{state}
+            </if>
+        </where>
+        order by registerDate
+        <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+    </select>
+
+    <select id="getTotal" parameterType="Map" resultType="Long">
+        select count(*) from t_blogger
+        <where>
+            <if test="state!=null">
+                and state=#{state}
+            </if>
+        </where>
+    </select>
+
+</mapper>
